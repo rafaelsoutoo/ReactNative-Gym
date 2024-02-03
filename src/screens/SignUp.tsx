@@ -1,30 +1,28 @@
-import { useNavigation } from '@react-navigation/native';
 import { VStack, Image, Text, Center, Heading, ScrollView } from 'native-base';
 
-
-import { AuthNavigatorRoutesProps } from '@routes/auth.routes'
 import BackgroundImg from '@assets/background.png'; //trocar 
 
 import { Input } from '@components/input';
 import { Button } from '@components/Button';
 import LogoSvg from '@assets/logo.svg'
+import { useNavigation } from '@react-navigation/native';
 
-export function SignIn() {
+export function SignUp() {
 
-    const navigation = useNavigation<AuthNavigatorRoutesProps>();
+    const navigation = useNavigation();
 
-    function handleNewAccount() {
-        navigation.navigate('signUn')
+    function handleGoBack(){
+        navigation.goBack();
     }
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
             <VStack flex={1} px={10} pb={16}>
                 <Image
                     source={BackgroundImg}
+                    defaultSource={BackgroundImg}
                     alt="Pessoas treinando"
                     resizeMode="contain"
                     position="absolute"
-                    defaultSource={BackgroundImg}
                 />
 
                 <Center my={24}>
@@ -35,9 +33,12 @@ export function SignIn() {
 
                 <Center>
                     <Heading color="gray.100" fontSize="xl" mb={6} fontFamily="heading">
-                        Acesse sua conta
+                        Crie sua conta
                     </Heading>
 
+                    <Input
+                        placeholder='nome'
+                    />
                     <Input
                         placeholder='E-mail'
                         keyboardType="email-address"
@@ -47,15 +48,14 @@ export function SignIn() {
                         placeholder='Senha'
                         secureTextEntry
                     />
-
-                    <Button title='Acessar' />
+                    <Input
+                        placeholder='Confirme a Senha'
+                        secureTextEntry
+                    />
+                    <Button title='Criar e acessar' />
                 </Center>
 
-                <Center mt={24}>
-                    <Text color="gray.100" fontSize="sm" mb={3} fontFamily="body">Ainda não tem acesso?</Text>
-
-                    <Button title='Criar conta' variant="outline" onPress={handleNewAccount} />
-                </Center>
+                    <Button title='Voltar para o Login' variant="outline"  mt={24} onPress={handleGoBack}/>
             </VStack>
         </ScrollView>
     );
