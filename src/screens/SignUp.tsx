@@ -1,6 +1,8 @@
 import { VStack, Image, Text, Center, Heading, ScrollView } from 'native-base';
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form'
+import * as yup from 'yup'
+import {yupResolver} from '@hookform/resolvers/yup'
 
 import BackgroundImg from '@assets/background.png'; //trocar 
 
@@ -9,9 +11,25 @@ import { Button } from '@components/Button';
 import LogoSvg from '@assets/logo.svg'
 import { useNavigation } from '@react-navigation/native';
 
+type FormDataProps = {
+    name: string;
+    email: string;
+    password: string;
+    password_confirm: string
+}
+
+
+
+const signUpSchema = yup.object({
+    name: yup.string().required('Informe o nome'),
+    email: yup.string().required('Informe o Email').email('Email Inválido'),
+});
+
 export function SignUp() {
 
-    const { control } = useForm();
+    const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
+        resolver: yupResolver(signUpSchema)
+    });
 
     const navigation = useNavigation();
 
@@ -21,7 +39,8 @@ export function SignUp() {
 
 
 
-    function handleSignUp() {
+    function handleSignUp({ name, email, password, password_confirm }: FormDataProps) {
+        console.log(name, email, password, password_confirm);
     }
 
     return (
@@ -49,18 +68,31 @@ export function SignUp() {
                     <Controller
                         control={control}
                         name="name"
+                        rules={{
+                            required: 'Informe o nome.'
+                        }}
                         render={({ field: { onChange, value } }) => (
                             <Input
                                 placeholder='Nome'
                                 onChangeText={onChange}
                                 value={value}
+                                errorMessage={errors.name?.message}
+                                
                             />
                         )}
                     />
 
+
                     <Controller
                         control={control}
                         name="email"
+                        rules={{
+                            required: 'Informe o E-mail',
+                            pattern: {
+                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                message: 'E-mail inválido'
+                            }
+                        }}
                         render={({ field: { onChange, value } }) => (
                             <Input
                                 placeholder='Email'
@@ -68,9 +100,12 @@ export function SignUp() {
                                 autoCapitalize="none"
                                 onChangeText={onChange}
                                 value={value}
+                                errorMessage={errors.email?.message}
                             />
                         )}
                     />
+                   
+
                     <Controller
                         control={control}
                         name="password"
@@ -84,6 +119,8 @@ export function SignUp() {
                         )}
                     />
 
+                    
+
                     <Controller
                         control={control}
                         name="password_confirm"
@@ -93,11 +130,14 @@ export function SignUp() {
                                 secureTextEntry
                                 onChangeText={onChange}
                                 value={value}
+                                onSubmitEditing={handleSubmit(handleSignUp)}
+                                returnKeyType='send'
                             />
                         )}
                     />
+                   
 
-                    <Button title='Criar e acessar' onPress={handleSignUp} />
+                    <Button title='Criar e acessar' onPress={handleSubmit(handleSignUp)} />
                 </Center>
 
                 <Button title='Voltar para o Login' variant="outline" mt={24} onPress={handleGoBack} />
