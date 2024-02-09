@@ -19,7 +19,6 @@ type FormDataProps = {
 }
 
 
-
 const signUpSchema = yup.object({
     name: yup.string().required('Informe o nome'),
     email: yup.string().required('Informe o Email').email('Email Inválido'),
@@ -28,8 +27,8 @@ const signUpSchema = yup.object({
 export function SignUp() {
 
     const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
-        resolver: yupResolver(signUpSchema)
-    });
+       
+      });
 
     const navigation = useNavigation();
 
