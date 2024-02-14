@@ -54,7 +54,7 @@ export function SignUp() {
             console.log(reponse.data);
         } catch (error) {
           const isAppError = error instanceof AppError;
-          const title = isAppError ? error.massage : 'Não foi possível criar a conta. Tente mais tarde.'
+          const title = isAppError ? error.massage : 'Não foi possível criar a conta. Por Favor, tente mais tarde.'
 
           toast.show({
             title,
