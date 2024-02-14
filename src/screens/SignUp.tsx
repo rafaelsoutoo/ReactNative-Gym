@@ -1,14 +1,20 @@
-import { VStack, Image, Text, Center, Heading, ScrollView } from 'native-base';
-import { useForm, Controller } from 'react-hook-form'
-import * as yup from 'yup'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { VStack, Image, Text, Center, Heading, ScrollView , useToast} from 'native-base';
+import { useForm, Controller } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 import BackgroundImg from '@assets/background.png'; //trocar 
-import LogoSvg from '@assets/logo.svg'
+import LogoSvg from '@assets/logo.svg';
 
 import { Input } from '@components/input';
 import { Button } from '@components/Button';
 import { useNavigation } from '@react-navigation/native';
+
+import { api } from '@services/api';
+
+import {Alert} from 'react-native'
+
+import { AppError } from '@utils/AppError';
 
 type FormDataProps = {
     name: string;
@@ -27,6 +33,8 @@ const signUpSchema = yup.object({
 
 export function SignUp() {
 
+    const toast = useToast();
+
     const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
         resolver: yupResolver(signUpSchema)
     });
@@ -39,8 +47,21 @@ export function SignUp() {
 
 
 
-    function handleSignUp({ name, email, password, password_confirm }: FormDataProps) {
-        console.log(name, email, password, password_confirm);
+    async function handleSignUp({ name, email, password, password_confirm }: FormDataProps) {
+
+        try {
+            const reponse = await api.post('/users', { name, email, password });
+            console.log(reponse.data);
+        } catch (error) {
+          const isAppError = error instanceof AppError;
+          const title = isAppError ? error.massage : 'Não foi possível criar a conta. Tente mais tarde.'
+
+          toast.show({
+            title,
+            placement: 'top',
+            bg: 'red.500'
+          })
+        }
     }
 
     return (
