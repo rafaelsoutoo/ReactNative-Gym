@@ -1,7 +1,7 @@
 export class AppError {
-    massage: string;
+    message: string;
 
-    constructor(massage: string){
-        this.massage = massage
+    constructor(message: string){
+        this.message = message
     }
 }
