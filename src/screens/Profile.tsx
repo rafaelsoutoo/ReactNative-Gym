@@ -102,9 +102,10 @@ export function Profile() {
           />
 
           <Input
+            isDisabled
             bg="gray.600"
             placeholder="E-mail"
-            isDisabled
+
           />
 
           <Heading color="gray.200" fontSize="md" mb={2} alignSelf="flex-start" mt={12} fontFamily="heading">
