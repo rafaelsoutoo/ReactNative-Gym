@@ -23,7 +23,7 @@ type RouteParamsProps = {
 }
 
 export function Exercise() {
-  const [submittingRegister, setSubmittingRegister] = useState(false);
+  const [sendingRegister, setSendingRegister] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [exercise, setExercise] = useState<ExerciseDTO>({} as ExerciseDTO);
   const navigation = useNavigation<AppNavigatorRoutesProps>();
@@ -53,9 +53,6 @@ export function Exercise() {
         placement: 'top',
         bgColor: 'red.500'
       })
-
-      navigation.navigate('history');
-
     } finally {
       setIsLoading(false);
     }
@@ -63,19 +60,20 @@ export function Exercise() {
 
   async function handleExerciseHistoryRegister() {
     try {
-      setSubmittingRegister(true);
+      setSendingRegister(true);
 
-      await api.post('/history', {exercise_id: exerciseId})
+      await api.post('/history', { exercise_id: exerciseId });
 
       toast.show({
-        title: 'Parebéns! Exercício registrado com sucesso  ',
+        title: 'Parabéns! Exercício registrado no seu histórico.',
         placement: 'top',
-        bgColor: 'green.700'
-      })
+        bgColor: 'green.500'
+      });
 
+      navigation.navigate('history');
     } catch (error) {
       const isAppError = error instanceof AppError;
-      const title = isAppError ? error.message : 'Não foi possível registrar o execício';
+      const title = isAppError ? error.message : 'Não foi possível registrar exercício.';
 
       toast.show({
         title,
@@ -83,7 +81,7 @@ export function Exercise() {
         bgColor: 'red.500'
       })
     } finally {
-      setSubmittingRegister(false);
+      setSendingRegister(false);
     }
   }
 
@@ -152,7 +150,7 @@ export function Exercise() {
 
             <Button
               title="Marcar como realizado"
-              isLoading={submittingRegister}
+              isLoading={sendingRegister}
               onPress={handleExerciseHistoryRegister}
             />
           </Box>

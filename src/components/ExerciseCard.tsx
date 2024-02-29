@@ -13,7 +13,7 @@ type Props = TouchableOpacityProps & {
 
 };
 
-export function ExerciseCarde({ data, ...rest }: Props) {
+export function ExerciseCard({ data, ...rest }: Props) {
     return (
 
         <TouchableOpacity {...rest}>
@@ -30,10 +30,10 @@ export function ExerciseCarde({ data, ...rest }: Props) {
 
                 <VStack flex={1}>
                     <Heading fontSize="lg" color="white" fontFamily="heading">
-                       {data.name}
+                        {data.name}
                     </Heading>
                     <Text fontSize="sm" color="gray.200" mt={1} numberOfLines={2}>
-                       {data.series} séries x {data.repetitions} repetições
+                        {data.series} séries x {data.repetitions} repetições
                     </Text>
                 </VStack>
 

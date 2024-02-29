@@ -19,14 +19,14 @@ type AuthContextProviderProps = {
 
 export const AuthContext = createContext<AuthContextDataProps>({} as AuthContextDataProps);
 
-export function AuthContextProvider({ children }: AuthContextProviderProps)  {
+export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   const [user, setUser] = useState<UserDTO>({} as UserDTO);
-  const [isLoadingUserStorageData, setIsLoadingUserStorageData] = useState(true); 
+  const [isLoadingUserStorageData, setIsLoadingUserStorageData] = useState(true);
 
   async function userAndTokenUpdate(userData: UserDTO, token: string) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      
+
     setUser(userData);
   }
 
@@ -35,7 +35,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps)  {
       setIsLoadingUserStorageData(true)
       await storageUserSave(userData);
       await storageAuthTokenSave(token);
-      
+
     } catch (error) {
       throw error
     } finally {
@@ -46,8 +46,8 @@ export function AuthContextProvider({ children }: AuthContextProviderProps)  {
   async function singIn(email: string, password: string) {
     try {
       const { data } = await api.post('/sessions', { email, password });
-     
-      if(data.user && data.token) {
+
+      if (data.user && data.token) {
         await storageUserAndTokenSave(data.user, data.token);
         userAndTokenUpdate(data.user, data.token)
       }
@@ -77,10 +77,10 @@ export function AuthContextProvider({ children }: AuthContextProviderProps)  {
 
       const userLogged = await storageUserGet();
       const token = await storageAuthTokenGet();
-      
-      if(token && userLogged) {
+
+      if (token && userLogged) {
         userAndTokenUpdate(userLogged, token);
-      } 
+      }
     } catch (error) {
       throw error
     } finally {
@@ -90,11 +90,11 @@ export function AuthContextProvider({ children }: AuthContextProviderProps)  {
 
   useEffect(() => {
     loadUserData()
-  },[])
+  }, [])
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
+    <AuthContext.Provider value={{
+      user,
       singIn,
       signOut,
       isLoadingUserStorageData

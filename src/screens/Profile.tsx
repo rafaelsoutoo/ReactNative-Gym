@@ -131,11 +131,13 @@ export function Profile() {
             name='email'
             render={({ field: { value, onChange } }) => (
               <Input
-                isDisabled
                 bg="gray.600"
                 placeholder="E-mail"
+                isDisabled
+                isReadOnly
                 onChangeText={onChange}
                 value={value}
+
               />
             )}
           />
