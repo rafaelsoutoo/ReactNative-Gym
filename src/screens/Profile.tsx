@@ -3,17 +3,26 @@ import { TouchableOpacity } from 'react-native';
 import { Center, ScrollView, VStack, Skeleton, Text, Heading, useToast } from 'native-base';
 import * as ImagePick from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
-import { FileInfo } from "expo-file-system";
 
+import { Control, Controller, useForm } from 'react-hook-form';
 
 import { ScreenHeader } from '@components/ScreenHeader';
 import { UserPhoto } from '@components/UserPhoto';
 import { Input } from '@components/input';
 import { Button } from '@components/Button';
+import { useAuth } from '@hooks/useAuth';
 
 
 
 const PHOTO_SIZE = 33;
+
+type FormDataProps = {
+  name: string;
+  email: string;
+  password: string;
+  oldPassword: string;
+  newPassword: string;
+}
 
 export function Profile() {
 
@@ -23,6 +32,14 @@ export function Profile() {
   const [userPhoto, setUserPhoto] = useState('https://via.placeholder.com/150')
 
   const toast = useToast();
+  const { user } = useAuth();
+
+  const { control } = useForm({
+    defaultValues: {
+      name: user.name,
+      email: user.email
+    }
+  });
 
   async function handleUserPhotoSelect() {
     setPhotoIsLoading(true);
@@ -96,39 +113,64 @@ export function Profile() {
             </Text>
           </TouchableOpacity>
 
-          <Input
-            bg="gray.600"
-            placeholder='Nome'
+          <Controller
+            control={control}
+            name='name'
+            render={({ field: { value, onChange } }) => (
+              <Input
+                bg="gray.600"
+                placeholder='Nome'
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
           />
 
-          <Input
-            isDisabled
-            bg="gray.600"
-            placeholder="E-mail"
-
+          <Controller
+            control={control}
+            name='email'
+            render={({ field: { value, onChange } }) => (
+              <Input
+                isDisabled
+                bg="gray.600"
+                placeholder="E-mail"
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
           />
+
 
           <Heading color="gray.200" fontSize="md" mb={2} alignSelf="flex-start" mt={12} fontFamily="heading">
             Alterar senha
           </Heading>
 
+
           <Input
             bg="gray.600"
             placeholder="Senha antiga"
             secureTextEntry
+
           />
+
+
 
           <Input
             bg="gray.600"
             placeholder="Nova senha"
             secureTextEntry
+
           />
+
 
           <Input
             bg="gray.600"
             placeholder="Confirme a nova senha"
             secureTextEntry
+
           />
+
+
 
           <Button title="Atualizar" mt={4} />
         </Center>
